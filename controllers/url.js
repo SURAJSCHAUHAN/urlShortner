@@ -1,5 +1,7 @@
 const shortid=require('shortid');
 const URL=require('../models/url');
+require('dotenv').config()
+const baseurl= process.env.BASE_URL;
 
 const generateShortUrl= async(req,res)=>{
     const body=req.body;
@@ -10,8 +12,9 @@ const generateShortUrl= async(req,res)=>{
         redirectUrl:body.url,
         visitHistory:[]
     });
-
-    return res.json({id:shortID,shortURL:`http://localhost:3001/${shortID}`});
+    
+    // return res.json({id:shortID,shortURL:`http://localhost:3001/${shortID}`});
+    return res.json({id:shortID,shortURL:`${baseurl}/${shortID}`});
 }
 
 // const getUrlAnalytics=async(req,res)=>{
@@ -38,7 +41,7 @@ const getShortUrl=async(req,res)=>{
     if(!url) return res.status(400).json({error:"url missing"});
     const result=await URL.findOne({redirectUrl:url});
     if(!result) return res.json({message:"NO URL FOUND. Please Create ShortURL"});
-    return res.json({shortURL:`http://localhost:3001/${result.shortId}`})
+    return res.json({shortURL:`${baseurl}/${result.shortId}`})
 }
 
 module.exports ={generateShortUrl,getUrlAnalytics,getShortUrl};
